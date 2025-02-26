@@ -6,13 +6,18 @@ import java.time.Instant;
 
 public class ComparadorEstructuras {
     private static final int TAMANO_DATOS = 500000;
-    private static final int BUSQUEDAS = 100000;
+    private static final int BUSQUEDAS = 10000;
 
     public static void main(String[] args) {
         // Preparar datos
         Integer[] elementos = new Integer[TAMANO_DATOS];
+        Integer[] elementosDesordenados = new Integer[TAMANO_DATOS];
+
+        Random random = new Random();
+
         for (int i = 0; i < TAMANO_DATOS; i++) {
             elementos[i] = i;
+            elementosDesordenados[i] = random.nextInt(TAMANO_DATOS);
         }
 
         // Estructuras a comparar
@@ -55,7 +60,7 @@ public class ComparadorEstructuras {
         System.out.println("\nPRUEBAS DE BÚSQUEDA (" + BUSQUEDAS + " búsquedas aleatorias)");
         System.out.println("-----------------------------------------");
 
-        Random random = new Random();
+
 
         medirTiempo("ArrayList - Búsqueda", () -> {
             for (int i = 0; i < BUSQUEDAS; i++) {
@@ -112,6 +117,80 @@ public class ComparadorEstructuras {
         medirTiempo("LinkedList - Inserción al inicio", () -> {
             for (int i = 0; i < 1000; i++) {
                 linkedList.add(0, i);
+            }
+        });
+
+        // Medir ordenación
+        System.out.println("\nPRUEBAS DE ORDENACIÓN (500000 elementos)");
+        System.out.println("-----------------------------------------");
+
+        ArrayList<Integer> arrayListDesordenado = new ArrayList<>();
+        LinkedList<Integer> linkedListDesordenado = new LinkedList<>();
+
+        for (int i = 0; i < TAMANO_DATOS; i++) {
+            arrayListDesordenado.add(elementosDesordenados[i]);
+            linkedListDesordenado.add(elementosDesordenados[i]);
+        }
+
+        medirTiempo("ArrayList - Ordenación (Collections.sort())", () -> {
+            Collections.sort(arrayListDesordenado);
+        });
+
+        medirTiempo("LinkedList - Ordenación (Collections.sort())", () -> {
+            Collections.sort(linkedListDesordenado);
+        });
+
+        // Medir ordenación (TreeSet y TreeMap ya están ordenados)
+        System.out.println("TreeSet - Estructura ya ordenada por naturaleza");
+        System.out.println("TreeMap - Estructura ya ordenada por naturaleza");
+
+        // Medir ordenacion (HashMap y HashSet no tienen orden)
+        System.out.println("HashMap - Estructura sin orden");
+        System.out.println("HashSet - Estructura sin orden");
+
+        // Medir eliminación
+        System.out.println("\nPRUEBAS DE ELIMINACIÓN (500000 elementos)");
+        System.out.println("-----------------------------------------");
+
+        medirTiempo("ArrayList - Eliminación (primera mitad, desde el principio)", () -> {
+            for (int i = 0; i < TAMANO_DATOS/2; i++) {
+                arrayList.removeFirst();
+            }
+        });
+
+        medirTiempo("ArrayList - Eliminación (segunda mitad desde el final)", () -> {
+            for (int i = 0; i < TAMANO_DATOS/2; i++) {
+                arrayList.removeLast();
+            }
+        });
+
+        medirTiempo("LinkedList - Eliminación", () -> {
+            for (int i = 0; i < TAMANO_DATOS; i++) {
+                linkedList.removeFirst();
+            }
+        });
+
+        medirTiempo("HashSet - Eliminación", () -> {
+            for (int i = 0; i < TAMANO_DATOS; i++) {
+                hashSet.remove(i);
+            }
+        });
+
+        medirTiempo("TreeSet - Eliminación", () -> {
+            for (int i = 0; i < TAMANO_DATOS; i++) {
+                treeSet.remove(i);
+            }
+        });
+
+        medirTiempo("HashMap - Eliminación", () -> {
+            for (int i = 0; i < TAMANO_DATOS; i++) {
+                hashMap.remove(i);
+            }
+        });
+
+        medirTiempo("TreeMap - Eliminación", () -> {
+            for (int i = 0; i < TAMANO_DATOS; i++) {
+                treeMap.remove(i);
             }
         });
     }
